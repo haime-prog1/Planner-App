@@ -8,6 +8,8 @@ import Lists from './pages/Lists'
 import Settings from './pages/Settings'
 import Emergency from './pages/Emergency'
 import Guide from './pages/Guide'
+import Trips from './pages/Trips'
+import { useStore } from './store'
 import Icon from './components/Icons'
 
 const tabs = [
@@ -20,9 +22,11 @@ const tabs = [
 ]
 
 export default function App() {
+  const { trip } = useStore()
   return (
     <div className="app">
       <main className="content">
+        {!trip ? <Trips /> : (
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/itinerary" element={<Itinerary />} />
@@ -31,10 +35,12 @@ export default function App() {
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/lists" element={<Lists />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/trips" element={<Trips />} />
           <Route path="/guide" element={<Guide />} />
           <Route path="/emergency" element={<Emergency />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+        )}
       </main>
       <nav className="tabbar">
         {tabs.map(([to, icon, label]) => (

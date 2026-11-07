@@ -2,15 +2,32 @@ import { uid } from './utils'
 
 const it = (day, time, activity, location, notes = '', status = 'planned') =>
   ({ id: uid(), day, time, activity, location, notes, status })
+const checks = (list) => list.map((text) => ({ id: uid(), text, done: false }))
 
-export const emptyData = () => ({
-  version: 1,
-  sample: false,
-  itinerary: [], contacts: [], flights: [], transfers: [], stays: [], expenses: [], packing: [], todos: []
+export const COLLECTIONS = ['itinerary', 'contacts', 'flights', 'transfers', 'stays', 'expenses', 'packing', 'todos']
+export const emptyCollections = () => Object.fromEntries(COLLECTIONS.map((c) => [c, []]))
+
+// Stable id so the Boracay trip matches across phones when shared
+export const BORACAY_ID = 'boracay-2026'
+export const boracayMeta = () => ({
+  id: BORACAY_ID, name: 'Boracay', destination: 'Boracay, Malay, Aklan', type: 'vacation',
+  start: '2026-11-13', end: '2026-11-17', budget: 20000, travelers: ['James', 'Sheerah'],
+  lat: 11.9674, lon: 121.9248
 })
 
-export const sampleData = () => ({
-  version: 1,
+const VACATION_PACKING = ['Swimwear', 'Sunscreen (reef-safe)', 'Sunglasses & hat', 'Dry bag', 'Phone waterproof pouch', 'Slippers', 'Power bank', 'IDs', 'Medicines', 'Light clothes']
+const VACATION_TODOS = ['Web check-in for flights', 'Save booking confirmations', 'Withdraw cash', 'Book activities', 'Tell bank about travel']
+const WORK_PACKING = ['Laptop + charger', 'Office ID / government ID', 'Travel Order (printed)', 'Business / office attire', 'Power bank', 'Extension cord', 'Notebook & pens', 'Toiletries', 'Medicines', 'Umbrella']
+const WORK_TODOS = ['Travel Order approved', 'Book flights / transport', 'Book accommodation', 'Cash advance (if any)', 'Coordinate with host office', 'Get Certificate of Appearance signed', 'Keep receipts and boarding passes', 'Liquidation / travel report after the trip']
+
+/** Starter checklists for a new trip by type */
+export const starterLists = (type) => ({
+  packing: checks(type === 'work' ? WORK_PACKING : VACATION_PACKING),
+  todos: checks(type === 'work' ? WORK_TODOS : VACATION_TODOS)
+})
+
+export const sampleBoracay = () => ({
+  ...boracayMeta(),
   sample: true,
   contacts: [],
   itinerary: [
@@ -47,8 +64,5 @@ export const sampleData = () => ({
     { id: uid(), date: '2026-09-05', category: 'hotel', description: 'Hotel deposit', amount: 4500, paidBy: 'Sheerah', foreignAmount: '', foreignCurrency: '', notes: '50% downpayment' },
     { id: uid(), date: '2026-10-10', category: 'activities', description: 'Island hopping tour', amount: 1800, paidBy: 'Sheerah', foreignAmount: '', foreignCurrency: '', notes: '' }
   ],
-  packing: ['Swimwear', 'Sunscreen (reef-safe)', 'Sunglasses & hat', 'Dry bag', 'Phone waterproof pouch', 'Slippers', 'Power bank', 'IDs', 'Medicines', 'Light clothes']
-    .map((text) => ({ id: uid(), text, done: false })),
-  todos: ['Web check-in for flights', 'Print/save booking confirmations', 'Withdraw cash (ATMs can be busy)', 'Register for Boracay QR / requirements', 'Book island hopping', 'Tell bank about travel']
-    .map((text) => ({ id: uid(), text, done: false }))
+  ...starterLists('vacation')
 })

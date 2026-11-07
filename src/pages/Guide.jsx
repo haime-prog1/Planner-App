@@ -9,7 +9,7 @@ import { FOOD, ACTIVITIES } from '../guide'
 const LEVELS = { 1: ['₱', 'Budget'], 2: ['₱₱', 'Mid-range'], 3: ['₱₱₱', 'Splurge'] }
 
 export default function Guide() {
-  const { add } = useStore()
+  const { add, trip } = useStore()
   const [tab, setTab] = useState('food')
   const [level, setLevel] = useState(0)
   const ed = useEditor()
@@ -49,7 +49,7 @@ export default function Guide() {
       ))}
       <p className="muted small">Prices and opening hours change — check reviews or ask your hotel before going.</p>
       {ed.editing && (
-        <FormModal title="Add to plan" fields={itineraryFields} initial={ed.editing}
+        <FormModal title="Add to plan" fields={itineraryFields(trip)} initial={ed.editing}
           onSave={(v) => add('itinerary', { ...v, day: Number(v.day) })} onClose={ed.close} />
       )}
     </div>
