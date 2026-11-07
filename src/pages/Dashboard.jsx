@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../store'
+import Weather from '../components/Weather'
+import FormModal, { useEditor } from '../components/Form'
+import { expenseFields, newExpense } from './Expenses'
 import { TRIP, peso, fmtDate, fmtDateTime, dayDate, fmtTime } from '../utils'
 
 function useNow(ms = 30000) {
@@ -10,7 +13,8 @@ function useNow(ms = 30000) {
 }
 
 export default function Dashboard() {
-  const { data, clearSample } = useStore()
+  const { data, clearSample, add } = useStore()
+  const ed = useEditor()
   const now = useNow()
   const start = new Date(TRIP.start + 'T00:00:00')
   const end = new Date(TRIP.end + 'T23:59:59')
@@ -64,6 +68,8 @@ export default function Dashboard() {
         ) : <p className="muted">Nothing upcoming. Add items in Plan.</p>}
       </section>
 
+      <Weather />
+
       <section className="card">
         <h2>Budget</h2>
         <div className="stats">
@@ -79,6 +85,14 @@ export default function Dashboard() {
         <Link to="/itinerary" className="btn">🗓️ {data.itinerary.length} plans</Link>
         <Link to="/lists" className="btn">🧳 {data.packing.filter((p) => p.done).length}/{data.packing.length} packed</Link>
       </section>
+
+      <Link to="/emergency" className="btn danger full">🆘 Emergency info</Link>
+
+      <button className="btn primary fab" onClick={() => ed.openNew(newExpense())}>＋ ₱ Expense</button>
+      {ed.editing && (
+        <FormModal title="Add expense" fields={expenseFields} initial={ed.editing}
+          onSave={(v) => add('expenses', v)} onClose={ed.close} />
+      )}
     </div>
   )
 }

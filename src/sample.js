@@ -6,12 +6,13 @@ const it = (day, time, activity, location, notes = '', status = 'planned') =>
 export const emptyData = () => ({
   version: 1,
   sample: false,
-  itinerary: [], flights: [], transfers: [], stays: [], expenses: [], packing: [], todos: []
+  itinerary: [], contacts: [], flights: [], transfers: [], stays: [], expenses: [], packing: [], todos: []
 })
 
 export const sampleData = () => ({
   version: 1,
   sample: true,
+  contacts: [],
   itinerary: [
     it(1, '05:30', 'Flight MNL → MPH', 'NAIA Terminal 3', 'Be at airport by 4:00 AM', 'booked'),
     it(1, '08:00', 'Van + boat to Station 2', 'Caticlan jetty → Cagban', 'Bring environmental fee receipt'),
