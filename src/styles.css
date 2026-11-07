@@ -217,3 +217,73 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary); o
 .sos { background: var(--neg); border-radius: 14px; }
 .call { background: var(--pos) !important; border-radius: 99px; min-width: 44px; min-height: 44px; padding: 0; }
 .wx-day { background: var(--fill); }
+
+/* ================= Glass theme ================= */
+:root {
+  --glass: rgba(255,255,255,.55); --glass-strong: rgba(255,255,255,.72);
+  --glass-border: rgba(255,255,255,.7); --glass-shadow: 0 8px 32px rgba(31,64,104,.14);
+  --blur: saturate(180%) blur(22px); --fill: rgba(255,255,255,.5); --muted: #5f6b7a;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --glass: rgba(30,32,40,.5); --glass-strong: rgba(36,38,48,.72); --glass-border: rgba(255,255,255,.14);
+    --glass-shadow: 0 8px 32px rgba(0,0,0,.4); --fill: rgba(255,255,255,.1); --muted: #a1a8b3; }
+}
+
+/* Beach-colored backdrop behind everything */
+body { background: #dff3ff; }
+body::before { content: ''; position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(40% 35% at 15% 10%, #6fd3ff 0%, transparent 70%),
+    radial-gradient(45% 40% at 90% 20%, #ffb5d8 0%, transparent 70%),
+    radial-gradient(50% 40% at 80% 85%, #ffe08a 0%, transparent 70%),
+    radial-gradient(45% 40% at 10% 80%, #7ef0c8 0%, transparent 70%),
+    linear-gradient(180deg, #e6f6ff, #fff4e6); }
+@media (prefers-color-scheme: dark) {
+  body { background: #070b16; }
+  body::before { background:
+    radial-gradient(40% 35% at 15% 10%, #0b5c8a 0%, transparent 70%),
+    radial-gradient(45% 40% at 90% 25%, #5b1f5e 0%, transparent 70%),
+    radial-gradient(50% 40% at 80% 85%, #6b4a10 0%, transparent 70%),
+    radial-gradient(45% 40% at 10% 80%, #0d5b48 0%, transparent 70%),
+    linear-gradient(180deg, #070b16, #0c0a14); }
+}
+
+/* Glass surfaces */
+.card, .btn:not(.primary):not(.danger), .seg, .wx-day, .modal, .notice, .settle {
+  background: var(--glass); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.6);
+}
+.card { border-radius: 20px; }
+.btn.danger { background: var(--glass); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border: 1px solid var(--glass-border); }
+.wx-day, .settle { box-shadow: inset 0 1px 0 rgba(255,255,255,.5); border-radius: 14px; }
+@media (prefers-color-scheme: dark) {
+  .card, .btn:not(.primary):not(.danger), .seg, .wx-day, .modal, .notice, .settle { box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.08); }
+}
+
+/* Floating glass tab bar */
+.tabbar { left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom) + 8px); border-radius: 28px; padding-bottom: 0;
+  background: var(--glass-strong); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.6); max-width: 616px; }
+.tab { justify-content: center; border-radius: 22px; margin: 5px 2px; height: calc(var(--tabh) - 10px); }
+.tab.active { background: rgba(0,122,255,.12); }
+.content { padding-bottom: calc(var(--tabh) + env(safe-area-inset-bottom) + 40px); }
+.fab { bottom: calc(var(--tabh) + env(safe-area-inset-bottom) + 22px); }
+
+/* Glassy primary buttons */
+.btn.primary { background: linear-gradient(180deg, rgba(40,150,255,.92), rgba(0,110,240,.92)); border: 1px solid rgba(255,255,255,.35);
+  box-shadow: 0 6px 18px rgba(0,122,255,.3), inset 0 1px 0 rgba(255,255,255,.45); }
+
+/* Hero: glass over color */
+.hero { background: linear-gradient(150deg, rgba(30,144,255,.85), rgba(0,198,215,.75) 55%, rgba(255,211,107,.8));
+  border: 1px solid rgba(255,255,255,.5); box-shadow: 0 12px 36px rgba(0,122,255,.25), inset 0 1px 0 rgba(255,255,255,.6); }
+.countdown, .hero-gear { background: rgba(255,255,255,.25); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.4); }
+
+/* Segmented control & inputs */
+.seg { border-radius: 14px; padding: 3px; }
+.seg button { border-radius: 11px; }
+.seg button.active { background: var(--glass-strong); box-shadow: 0 4px 12px rgba(0,0,0,.1), inset 0 1px 0 rgba(255,255,255,.7); }
+input, select, textarea { background: var(--fill); border: 1px solid var(--glass-border); }
+
+/* Sheet */
+.modal-backdrop { background: rgba(10,20,40,.25); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.modal { background: var(--glass-strong); border-radius: 28px 28px 0 0; border-bottom: 0; }
