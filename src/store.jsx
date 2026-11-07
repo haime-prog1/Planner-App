@@ -16,7 +16,7 @@ function load() {
     const old = localStorage.getItem(OLD_KEY) // migrate the original Boracay-only data
     if (old) return { version: 2, activeId: BORACAY_ID, trips: [fromV1(JSON.parse(old))] }
   } catch { /* ignore */ }
-  return { version: 2, activeId: BORACAY_ID, trips: [sampleBoracay()] }
+  return { version: 2, activeId: null, trips: [] }
 }
 
 export function StoreProvider({ children }) {

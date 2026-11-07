@@ -319,3 +319,5 @@ input, select, textarea { background: var(--fill); border: 1px solid var(--glass
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .hero.work { background: linear-gradient(150deg, rgba(88,86,214,.9), rgba(0,122,255,.8) 60%, rgba(90,200,250,.8)); }
 .hero-pad { padding-top: 60px; }
+.welcome { text-align: center; padding: 28px 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.welcome-icon { font-size: 56px; }

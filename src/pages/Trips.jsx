@@ -1,8 +1,9 @@
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import Header from '../components/Header'
 import FormModal, { useEditor } from '../components/Form'
-import { fmtRange, tripDays, tripStatus, spentOf, peso, dayDate } from '../utils'
+import { fmtRange, tripDays, tripStatus, spentOf, peso, dayDate, readJSONFile } from '../utils'
 
 export const TYPE = { work: ['💼', 'Work'], vacation: ['🌴', 'Vacation'] }
 
@@ -13,7 +14,7 @@ export const tripFields = [
   { name: 'start', label: 'Start date', type: 'date', required: true },
   { name: 'end', label: 'End date', type: 'date', required: true },
   { name: 'budget', label: 'Budget / allowance (₱)', type: 'number' },
-  { name: 'travelers', label: 'Travelers (comma-separated)', placeholder: 'James' },
+  { name: 'travelers', label: 'Travelers (comma-separated)', placeholder: 'e.g. Juan, Maria' },
   { name: 'purpose', label: 'Purpose / notes', type: 'textarea', placeholder: 'e.g. Project monitoring, NSTW exhibit' }
 ]
 
@@ -21,7 +22,7 @@ export const tripFields = [
 export const toForm = (t) => ({ ...t, travelers: (t.travelers || []).join(', ') })
 export const fromForm = (v) => {
   const travelers = String(v.travelers || '').split(',').map((s) => s.trim()).filter(Boolean)
-  const out = { ...v, travelers: travelers.length ? travelers : ['James'], budget: Number(v.budget) || 0 }
+  const out = { ...v, travelers: travelers.length ? travelers : ['Me'], budget: Number(v.budget) || 0 }
   if (out.end < out.start) out.end = out.start
   out.lat = undefined; out.lon = undefined // re-locate weather if destination changed
   return out
@@ -78,7 +79,8 @@ function Calendar({ trips, onOpen }) {
 }
 
 export default function Trips() {
-  const { root, setActive, addTrip, updateTrip, removeTrip } = useStore()
+  const { root, setActive, addTrip, updateTrip, removeTrip, importData } = useStore()
+  const fileRef = useRef()
   const nav = useNavigate()
   const ed = useEditor()
   const now = new Date()
@@ -89,10 +91,17 @@ export default function Trips() {
 
   return (
     <div className="page">
-      <Header title="My trips" subtitle={`${trips.length} trips · ${work} work · ${trips.length - work} vacation`}
-        action={<button className="btn primary" onClick={() => ed.openNew({ type: 'work', travelers: 'James' })}>+ New</button>} />
+      <Header title="My trips" subtitle={trips.length ? `${trips.length} trips · ${work} work · ${trips.length - work} vacation` : ""}
+        action={<button className="btn primary" onClick={() => ed.openNew({ type: 'vacation' })}>+ New</button>} />
 
-      {trips.length === 0 && <p className="empty">No trips yet. Tap + New to add one.</p>}
+      {trips.length === 0 && (
+        <section className="card welcome">
+          <div className="welcome-icon">🧳</div>
+          <h2>Plan your first trip</h2>
+          <p className="muted">Itinerary, flights, hotel, budget and checklists — all saved on this phone and works offline.</p>
+          <button className="btn primary full" onClick={() => ed.openNew({ type: 'vacation' })}>+ Create a trip</button>
+        </section>
+      )}
 
       <Calendar trips={trips} onOpen={open} />
 
@@ -128,6 +137,17 @@ export default function Trips() {
           </ul>
         </section>
       ))}
+
+      <button className="btn ghost full" onClick={() => fileRef.current.click()}>⬆️ Import a trip someone shared</button>
+      <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={async (e) => {
+        const f = e.target.files[0]; e.target.value = ''
+        if (!f) return
+        try {
+          const obj = await readJSONFile(f)
+          const ok = Array.isArray(obj.trips) ? confirm(`Restore backup with ${obj.trips.length} trip(s)? This replaces all your trips.`) : true
+          if (ok) { alert(importData(obj)); nav('/') }
+        } catch (err) { alert(err.message) }
+      }} />
 
       {ed.editing && (
         <FormModal title={ed.editing.__new ? 'New trip' : 'Edit trip'} fields={tripFields} initial={ed.editing}

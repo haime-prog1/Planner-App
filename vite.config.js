@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Boracay Trip Planner',
-        short_name: 'Boracay',
-        description: 'James & Sheerah — Boracay, Nov 13–17, 2026',
+        name: 'Trip Planner',
+        short_name: 'Trips',
+        description: 'Plan trips offline: itinerary, flights, hotel, budget and checklists',
         theme_color: '#f2f2f7',
         background_color: '#f2f2f7',
         display: 'standalone',
