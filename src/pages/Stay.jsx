@@ -1,3 +1,4 @@
+import { ROOM_TYPES } from '../options'
 import { useStore } from '../store'
 import Header from '../components/Header'
 import FormModal, { useEditor } from '../components/Form'
@@ -10,7 +11,7 @@ const fields = [
   { name: 'checkOut', label: 'Check-out', type: 'datetime-local' },
   { name: 'bookingRef', label: 'Booking ref' },
   { name: 'contact', label: 'Contact', placeholder: 'Phone / email' },
-  { name: 'roomType', label: 'Room type' },
+  { name: 'roomType', label: 'Room type', type: 'combo', options: ROOM_TYPES },
   { name: 'total', label: 'Total cost (₱)', type: 'number' },
   { name: 'paid', label: 'Amount paid (₱)', type: 'number' },
   { name: 'notes', label: 'Notes', type: 'textarea' }

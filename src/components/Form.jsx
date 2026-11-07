@@ -1,5 +1,28 @@
 import { useState } from 'react'
 
+const OTHER = '__other__'
+
+/** Dropdown of presets plus "Other…", which reveals a text box for anything not in the list */
+function Combo({ value, options, onChange, required, placeholder }) {
+  const known = options.includes(value)
+  const [custom, setCustom] = useState(!!value && !known)
+  return (
+    <>
+      <select value={custom ? OTHER : value} required={required && !custom}
+        onChange={(e) => {
+          if (e.target.value === OTHER) { setCustom(true); onChange('') } else { setCustom(false); onChange(e.target.value) }
+        }}>
+        <option value="">Choose…</option>
+        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+        <option value={OTHER}>Other…</option>
+      </select>
+      {custom && (
+        <input autoFocus value={value} required={required} placeholder={placeholder || 'Type here'} onChange={(e) => onChange(e.target.value)} />
+      )}
+    </>
+  )
+}
+
 /**
  * Field-driven modal form.
  * fields: [{ name, label, type: text|number|date|time|datetime-local|select|textarea, options, required, placeholder }]
@@ -29,7 +52,10 @@ export default function FormModal({ title, fields, initial = {}, onSave, onClose
           {fields.map((f) => (
             <label key={f.name} className="field">
               <span>{f.label}{f.required && ' *'}</span>
-              {f.type === 'select' ? (
+              {f.type === 'combo' ? (
+                <Combo value={v[f.name]} options={f.options} required={f.required} placeholder={f.placeholder}
+                  onChange={(val) => setV((cur) => ({ ...cur, [f.name]: val }))} />
+              ) : f.type === 'select' ? (
                 <select value={v[f.name]} onChange={set(f.name)} required={f.required}>
                   {f.options.map((o) => {
                     const [val, lab] = Array.isArray(o) ? o : [o, o]

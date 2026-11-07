@@ -292,3 +292,4 @@ input, select, textarea { background: var(--fill); border: 1px solid var(--glass
   background: var(--glass); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border: 1px solid var(--glass-border); }
 .chip.active { background: var(--primary); color: #fff; border-color: transparent; }
 .guide-btn { margin-bottom: 12px; }
+.field select + input { margin-top: 6px; }

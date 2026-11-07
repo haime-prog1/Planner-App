@@ -1,3 +1,4 @@
+import { ACTIVITY_PRESETS, PLACES } from '../options'
 import { useState } from 'react'
 import { useStore } from '../store'
 import Header from '../components/Header'
@@ -8,8 +9,8 @@ const STATUSES = ['planned', 'booked', 'done']
 export const itineraryFields = [
   { name: 'day', label: 'Day', type: 'select', options: Array.from({ length: TRIP.days }, (_, i) => [String(i + 1), `Day ${i + 1} · ${fmtDate(dayDate(i + 1))}`]) },
   { name: 'time', label: 'Time', type: 'time' },
-  { name: 'activity', label: 'Activity', required: true },
-  { name: 'location', label: 'Location' },
+  { name: 'activity', label: 'Activity', type: 'combo', options: ACTIVITY_PRESETS, required: true },
+  { name: 'location', label: 'Location', type: 'combo', options: PLACES },
   { name: 'status', label: 'Status', type: 'select', options: STATUSES, default: 'planned' },
   { name: 'notes', label: 'Notes', type: 'textarea' }
 ]
