@@ -7,14 +7,15 @@ import Expenses from './pages/Expenses'
 import Lists from './pages/Lists'
 import Settings from './pages/Settings'
 import Emergency from './pages/Emergency'
+import Icon from './components/Icons'
 
 const tabs = [
-  ['/', '🏝️', 'Home'],
-  ['/itinerary', '🗓️', 'Plan'],
-  ['/travel', '✈️', 'Travel'],
-  ['/stay', '🏨', 'Stay'],
-  ['/expenses', '💸', 'Money'],
-  ['/lists', '✅', 'Lists']
+  ['/', 'home', 'Home'],
+  ['/itinerary', 'plan', 'Plan'],
+  ['/travel', 'travel', 'Travel'],
+  ['/stay', 'stay', 'Stay'],
+  ['/expenses', 'money', 'Money'],
+  ['/lists', 'lists', 'Lists']
 ]
 
 export default function App() {
@@ -36,7 +37,7 @@ export default function App() {
       <nav className="tabbar">
         {tabs.map(([to, icon, label]) => (
           <NavLink key={to} to={to} end={to === '/'} className="tab">
-            <span className="tab-icon" aria-hidden>{icon}</span>
+            <Icon name={icon} />
             <span>{label}</span>
           </NavLink>
         ))}

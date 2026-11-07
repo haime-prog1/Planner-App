@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../store'
+import Icon from '../components/Icons'
 import Weather from '../components/Weather'
 import FormModal, { useEditor } from '../components/Form'
 import { expenseFields, newExpense } from './Expenses'
@@ -40,7 +41,7 @@ export default function Dashboard() {
   return (
     <div className="page">
       <header className="hero">
-        <Link to="/settings" className="icon-btn hero-gear" aria-label="Settings & data">⚙️</Link>
+        <Link to="/settings" className="icon-btn hero-gear" aria-label="Settings & data"><Icon name="gear" size={22} /></Link>
         <p className="hero-kicker">{TRIP.travelers.join(' & ')}</p>
         <h1>Boracay 🌴</h1>
         <p>{fmtDate(TRIP.start, { month: 'short', day: 'numeric' })} – {fmtDate(TRIP.end, { month: 'short', day: 'numeric', year: 'numeric' })} · {TRIP.days} days</p>
