@@ -5,7 +5,7 @@ import FormModal, { useEditor } from '../components/Form'
 import { TRIP, dayDate, fmtDate, fmtTime } from '../utils'
 
 const STATUSES = ['planned', 'booked', 'done']
-const fields = [
+export const itineraryFields = [
   { name: 'day', label: 'Day', type: 'select', options: Array.from({ length: TRIP.days }, (_, i) => [String(i + 1), `Day ${i + 1} · ${fmtDate(dayDate(i + 1))}`]) },
   { name: 'time', label: 'Time', type: 'time' },
   { name: 'activity', label: 'Activity', required: true },
@@ -75,7 +75,7 @@ export default function Itinerary() {
       </ul>
       {items.length > 1 && <button className="btn ghost full" onClick={sortByTime}>Sort Day {day} by time</button>}
       {ed.editing && (
-        <FormModal title={ed.editing.__new ? 'Add activity' : 'Edit activity'} fields={fields} initial={ed.editing}
+        <FormModal title={ed.editing.__new ? 'Add activity' : 'Edit activity'} fields={itineraryFields} initial={ed.editing}
           onSave={save} onClose={ed.close} onDelete={!ed.editing.__new && (() => remove('itinerary', ed.editing.id))} />
       )}
     </div>

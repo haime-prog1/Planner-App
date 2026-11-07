@@ -87,6 +87,8 @@ export default function Dashboard() {
         <Link to="/lists" className="btn">🧳 {data.packing.filter((p) => p.done).length}/{data.packing.length} packed</Link>
       </section>
 
+      <Link to="/guide" className="btn full guide-btn">🍽️ Food &amp; activities guide</Link>
+
       <Link to="/emergency" className="btn danger full">🆘 Emergency info</Link>
 
       <button className="btn primary fab" onClick={() => ed.openNew(newExpense())}>＋ ₱ Expense</button>
