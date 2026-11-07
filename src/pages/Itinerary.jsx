@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { useStore } from '../store'
 import Header from '../components/Header'
 import FormModal, { useEditor } from '../components/Form'
-import { TRIP, dayDate, fmtDate, fmtTime } from '../utils'
+import { dayDate, fmtDate, fmtTime, tripDays } from '../utils'
 
 const STATUSES = ['planned', 'booked', 'done']
-export const itineraryFields = [
-  { name: 'day', label: 'Day', type: 'select', options: Array.from({ length: TRIP.days }, (_, i) => [String(i + 1), `Day ${i + 1} · ${fmtDate(dayDate(i + 1))}`]) },
+export const itineraryFields = (trip) => [
+  { name: 'day', label: 'Day', type: 'select', options: Array.from({ length: tripDays(trip) }, (_, i) => [String(i + 1), `Day ${i + 1} · ${fmtDate(dayDate(trip, i + 1))}`]) },
   { name: 'time', label: 'Time', type: 'time' },
   { name: 'activity', label: 'Activity', type: 'combo', options: ACTIVITY_PRESETS, required: true },
   { name: 'location', label: 'Location', type: 'combo', options: PLACES },
@@ -16,10 +16,11 @@ export const itineraryFields = [
 ]
 
 export default function Itinerary() {
-  const { data, add, update, remove, replaceList } = useStore()
-  const [day, setDay] = useState(1)
+  const { data, trip, add, update, remove, replaceList } = useStore()
+  const [daySel, setDay] = useState(1)
+  const day = Math.min(daySel, tripDays(trip))
   const ed = useEditor()
-  const items = data.itinerary.filter((i) => Number(i.day) === day)
+  const items = data.itinerary.filter((i) => Math.min(Number(i.day), tripDays(trip)) === day)
 
   // Move within a day by swapping positions in the full list
   const move = (item, dir) => {
@@ -43,12 +44,12 @@ export default function Itinerary() {
 
   return (
     <div className="page">
-      <Header title="Itinerary" subtitle={fmtDate(dayDate(day), { weekday: 'long', month: 'long', day: 'numeric' })}
+      <Header title="Itinerary" subtitle={fmtDate(dayDate(trip, day), { weekday: 'long', month: 'long', day: 'numeric' })}
         action={<button className="btn primary" onClick={() => ed.openNew({ day: String(day), status: 'planned' })}>+ Add</button>} />
       <div className="seg">
-        {Array.from({ length: TRIP.days }, (_, i) => i + 1).map((d) => (
+        {Array.from({ length: tripDays(trip) }, (_, i) => i + 1).map((d) => (
           <button key={d} className={d === day ? 'active' : ''} onClick={() => setDay(d)}>
-            Day {d}<small>{fmtDate(dayDate(d), { month: 'short', day: 'numeric' })}</small>
+            Day {d}<small>{fmtDate(dayDate(trip, d), { month: 'short', day: 'numeric' })}</small>
           </button>
         ))}
       </div>
@@ -76,7 +77,7 @@ export default function Itinerary() {
       </ul>
       {items.length > 1 && <button className="btn ghost full" onClick={sortByTime}>Sort Day {day} by time</button>}
       {ed.editing && (
-        <FormModal title={ed.editing.__new ? 'Add activity' : 'Edit activity'} fields={itineraryFields} initial={ed.editing}
+        <FormModal title={ed.editing.__new ? 'Add activity' : 'Edit activity'} fields={itineraryFields(trip)} initial={ed.editing}
           onSave={save} onClose={ed.close} onDelete={!ed.editing.__new && (() => remove('itinerary', ed.editing.id))} />
       )}
     </div>

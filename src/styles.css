@@ -293,3 +293,29 @@ input, select, textarea { background: var(--fill); border: 1px solid var(--glass
 .chip.active { background: var(--primary); color: #fff; border-color: transparent; }
 .guide-btn { margin-bottom: 12px; }
 .field select + input { margin-top: 6px; }
+
+/* Trips dashboard */
+:root { --work: #5856d6; --vacation: #ff9500; }
+.type-badge { font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; }
+.type-badge.work { background: rgba(88,86,214,.15); color: var(--work); }
+.type-badge.vacation { background: rgba(255,149,0,.16); color: var(--vacation); }
+.trip-card { border-left: 4px solid transparent; }
+.trip-card.work { border-left-color: var(--work); }
+.trip-card.vacation { border-left-color: var(--vacation); }
+.trip-card.active { outline: 2px solid var(--primary); }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+.cal-h { font-size: 12px; color: var(--muted); font-weight: 600; }
+.cal-d { aspect-ratio: 1; border: 0; border-radius: 10px; background: transparent; color: var(--text); font: inherit; font-size: 15px; padding: 0; }
+.cal-d.on { color: #fff; font-weight: 700; cursor: pointer; }
+.cal-d.on.work { background: var(--work); }
+.cal-d.on.vacation { background: var(--vacation); }
+.cal-d.today { box-shadow: inset 0 0 0 2px var(--primary); }
+.cal-legend { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+.legend-item { display: flex; align-items: center; gap: 8px; background: none; border: 0; font: inherit; font-size: 15px; color: var(--text); text-align: left; padding: 6px 0; min-height: 36px; cursor: pointer; }
+.dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot.work { background: var(--work); } .dot.vacation { background: var(--vacation); }
+.hero-trips { position: absolute; top: 12px; left: 12px; color: #fff; background: rgba(255,255,255,.25); border: 1px solid rgba(255,255,255,.4);
+  border-radius: 99px; padding: 0 12px; min-height: 38px; display: inline-flex; align-items: center; font-size: 15px; font-weight: 600;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.hero.work { background: linear-gradient(150deg, rgba(88,86,214,.9), rgba(0,122,255,.8) 60%, rgba(90,200,250,.8)); }
+.hero-pad { padding-top: 60px; }

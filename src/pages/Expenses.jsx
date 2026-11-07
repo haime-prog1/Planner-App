@@ -2,27 +2,27 @@ import { EXPENSE_DESCRIPTIONS, CURRENCIES } from '../options'
 import { useStore } from '../store'
 import Header from '../components/Header'
 import FormModal, { useEditor } from '../components/Form'
-import { TRIP, peso, fmtDate } from '../utils'
+import { peso, fmtDate } from '../utils'
 
 export const CATEGORIES = ['flights', 'hotel', 'food', 'transport', 'activities', 'fees', 'shopping', 'other']
 const ICON = { flights: '✈️', hotel: '🏨', food: '🍽️', transport: '🛺', activities: '🤿', fees: '🧾', shopping: '🛍️', other: '📦' }
-const [A, B] = TRIP.travelers
 
-export const expenseFields = [
+export const expenseFields = (trip) => [
   { name: 'date', label: 'Date', type: 'date', required: true },
   { name: 'description', label: 'Description', type: 'combo', options: EXPENSE_DESCRIPTIONS, required: true },
   { name: 'category', label: 'Category', type: 'select', options: CATEGORIES.map((c) => [c, `${ICON[c]} ${c}`]), default: 'food' },
   { name: 'amount', label: 'Amount (₱)', type: 'number', required: true },
-  { name: 'paidBy', label: 'Paid by', type: 'select', options: TRIP.travelers, default: A },
+  { name: 'paidBy', label: 'Paid by', type: 'select', options: trip.travelers, default: trip.travelers[0] },
   { name: 'foreignAmount', label: 'Foreign amount (optional)', type: 'number' },
   { name: 'foreignCurrency', label: 'Foreign currency (optional)', type: 'combo', options: CURRENCIES },
   { name: 'notes', label: 'Notes', type: 'textarea' }
 ]
 
-export const newExpense = () => ({ date: new Date().toLocaleDateString('en-CA'), category: 'food', paidBy: A })
+export const newExpense = (trip) => ({ date: new Date().toLocaleDateString('en-CA'), category: 'food', paidBy: trip.travelers[0] })
 
 export default function Expenses() {
-  const { data, add, update, remove } = useStore()
+  const { data, trip, add, update, remove } = useStore()
+  const [A, B] = trip.travelers
   const ed = useEditor()
   const list = [...data.expenses].sort((a, b) => (b.date || '').localeCompare(a.date || ''))
   const total = list.reduce((s, e) => s + (Number(e.amount) || 0), 0)
@@ -32,16 +32,16 @@ export default function Expenses() {
   const maxCat = Math.max(1, ...byCat.map(([, v]) => v))
 
   // Equal split: each should pay half
-  const paid = Object.fromEntries(TRIP.travelers.map((p) => [p, list.filter((e) => e.paidBy === p).reduce((s, e) => s + (Number(e.amount) || 0), 0)]))
+  const paid = Object.fromEntries(trip.travelers.map((p) => [p, list.filter((e) => e.paidBy === p).reduce((s, e) => s + (Number(e.amount) || 0), 0)]))
   const share = total / 2
-  const diff = paid[A] - share // >0: B owes A
+  const diff = (paid[A] || 0) - share // >0: B owes A
   const settle = Math.abs(diff) < 0.5 ? 'All square — nobody owes anything. 🤝'
     : diff > 0 ? `${B} owes ${A} ${peso(diff)}` : `${A} owes ${B} ${peso(-diff)}`
 
   return (
     <div className="page">
-      <Header title="Expenses" subtitle={`${peso(total)} spent of ${peso(TRIP.budget)}`}
-        action={<button className="btn primary" onClick={() => ed.openNew(newExpense())}>+ Add</button>} />
+      <Header title="Expenses" subtitle={`${peso(total)} spent of ${peso(trip.budget)}`}
+        action={<button className="btn primary" onClick={() => ed.openNew(newExpense(trip))}>+ Add</button>} />
 
       <section className="card">
         <h2>By category</h2>
@@ -57,14 +57,14 @@ export default function Expenses() {
         </div>
       </section>
 
-      <section className="card">
+      {B && <section className="card">
         <h2>Split (50/50)</h2>
         <div className="stats">
-          {TRIP.travelers.map((p) => <div key={p}><span className="muted">{p} paid</span><b>{peso(paid[p])}</b></div>)}
+          {trip.travelers.map((p) => <div key={p}><span className="muted">{p} paid</span><b>{peso(paid[p])}</b></div>)}
           <div><span className="muted">Each share</span><b>{peso(share)}</b></div>
         </div>
         <p className="settle">{settle}</p>
-      </section>
+      </section>}
 
       <ul className="list">
         {list.map((e) => (
@@ -82,7 +82,7 @@ export default function Expenses() {
       </ul>
 
       {ed.editing && (
-        <FormModal title={ed.editing.__new ? 'Add expense' : 'Edit expense'} fields={expenseFields} initial={ed.editing}
+        <FormModal title={ed.editing.__new ? 'Add expense' : 'Edit expense'} fields={expenseFields(trip)} initial={ed.editing}
           onSave={(v) => (ed.editing.__new ? add('expenses', v) : update('expenses', ed.editing.id, v))}
           onClose={ed.close} onDelete={!ed.editing.__new && (() => remove('expenses', ed.editing.id))} />
       )}
