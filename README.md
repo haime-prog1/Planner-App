@@ -1,6 +1,6 @@
-# Boracay Trip Planner 🌴
+# Trip Planner 🌴
 
-Mobile-first PWA for James & Sheerah's Boracay trip (Nov 13–17, 2026, ₱20,000 budget).
+Mobile-first PWA for planning work and vacation trips — itinerary, flights, stays, expenses and checklists.
 Vite + React, localStorage only, works offline and installs to your home screen.
 
 ## Structure
