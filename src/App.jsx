@@ -6,6 +6,7 @@ import Stay from './pages/Stay'
 import Expenses from './pages/Expenses'
 import Lists from './pages/Lists'
 import Settings from './pages/Settings'
+import Emergency from './pages/Emergency'
 
 const tabs = [
   ['/', '🏝️', 'Home'],
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/lists" element={<Lists />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/emergency" element={<Emergency />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>

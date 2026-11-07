@@ -7,7 +7,7 @@ export const CATEGORIES = ['flights', 'hotel', 'food', 'transport', 'activities'
 const ICON = { flights: '✈️', hotel: '🏨', food: '🍽️', transport: '🛺', activities: '🤿', fees: '🧾', shopping: '🛍️', other: '📦' }
 const [A, B] = TRIP.travelers
 
-const fields = [
+export const expenseFields = [
   { name: 'date', label: 'Date', type: 'date', required: true },
   { name: 'description', label: 'Description', required: true },
   { name: 'category', label: 'Category', type: 'select', options: CATEGORIES.map((c) => [c, `${ICON[c]} ${c}`]), default: 'food' },
@@ -17,6 +17,8 @@ const fields = [
   { name: 'foreignCurrency', label: 'Foreign currency (optional)', placeholder: 'USD' },
   { name: 'notes', label: 'Notes', type: 'textarea' }
 ]
+
+export const newExpense = () => ({ date: new Date().toLocaleDateString('en-CA'), category: 'food', paidBy: A })
 
 export default function Expenses() {
   const { data, add, update, remove } = useStore()
@@ -38,7 +40,7 @@ export default function Expenses() {
   return (
     <div className="page">
       <Header title="Expenses" subtitle={`${peso(total)} spent of ${peso(TRIP.budget)}`}
-        action={<button className="btn primary" onClick={() => ed.openNew({ date: new Date().toISOString().slice(0, 10), category: 'food', paidBy: A })}>+ Add</button>} />
+        action={<button className="btn primary" onClick={() => ed.openNew(newExpense())}>+ Add</button>} />
 
       <section className="card">
         <h2>By category</h2>
@@ -79,7 +81,7 @@ export default function Expenses() {
       </ul>
 
       {ed.editing && (
-        <FormModal title={ed.editing.__new ? 'Add expense' : 'Edit expense'} fields={fields} initial={ed.editing}
+        <FormModal title={ed.editing.__new ? 'Add expense' : 'Edit expense'} fields={expenseFields} initial={ed.editing}
           onSave={(v) => (ed.editing.__new ? add('expenses', v) : update('expenses', ed.editing.id, v))}
           onClose={ed.close} onDelete={!ed.editing.__new && (() => remove('expenses', ed.editing.id))} />
       )}
