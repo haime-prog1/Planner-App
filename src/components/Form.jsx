@@ -19,9 +19,11 @@ export default function FormModal({ title, fields, initial = {}, onSave, onClose
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={submit}>
+        <div className="grabber" />
         <div className="modal-head">
+          <button type="button" className="link-btn" onClick={onClose}>Cancel</button>
           <h2>{title}</h2>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Close">✕</button>
+          <button type="submit" className="link-btn bold">Save</button>
         </div>
         <div className="modal-body">
           {fields.map((f) => (
@@ -46,13 +48,10 @@ export default function FormModal({ title, fields, initial = {}, onSave, onClose
               )}
             </label>
           ))}
-        </div>
-        <div className="modal-actions">
           {onDelete && (
-            <button type="button" className="btn danger"
+            <button type="button" className="btn danger full delete-row"
               onClick={() => { if (confirm('Delete this item?')) { onDelete(); onClose() } }}>Delete</button>
           )}
-          <button type="submit" className="btn primary">Save</button>
         </div>
       </form>
     </div>
