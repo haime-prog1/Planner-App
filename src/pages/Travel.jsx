@@ -1,3 +1,4 @@
+import { AIRLINES, AIRPORTS, BAGGAGE, TRANSFER_LEGS } from '../options'
 import { useStore } from '../store'
 import Header from '../components/Header'
 import FormModal, { useEditor } from '../components/Form'
@@ -5,18 +6,18 @@ import { fmtDateTime, peso } from '../utils'
 
 const flightFields = [
   { name: 'direction', label: 'Direction', type: 'select', options: ['Outbound', 'Return', 'Other'], default: 'Outbound' },
-  { name: 'airline', label: 'Airline', required: true },
+  { name: 'airline', label: 'Airline', type: 'combo', options: AIRLINES, required: true },
   { name: 'flightNo', label: 'Flight no.' },
   { name: 'bookingRef', label: 'Booking ref' },
-  { name: 'from', label: 'From airport', placeholder: 'MNL' },
-  { name: 'to', label: 'To airport', placeholder: 'MPH (Caticlan)' },
+  { name: 'from', label: 'From airport', type: 'combo', options: AIRPORTS },
+  { name: 'to', label: 'To airport', type: 'combo', options: AIRPORTS },
   { name: 'depart', label: 'Departure', type: 'datetime-local' },
   { name: 'arrive', label: 'Arrival', type: 'datetime-local' },
-  { name: 'baggage', label: 'Baggage' },
+  { name: 'baggage', label: 'Baggage', type: 'combo', options: BAGGAGE },
   { name: 'notes', label: 'Notes', type: 'textarea' }
 ]
 const transferFields = [
-  { name: 'leg', label: 'Leg', required: true, placeholder: 'Airport → Caticlan jetty' },
+  { name: 'leg', label: 'Leg', type: 'combo', options: TRANSFER_LEGS, required: true },
   { name: 'mode', label: 'Mode', type: 'select', options: ['Van', 'Tricycle', 'E-trike', 'Boat', 'E-trike + Boat', 'Bus', 'Car', 'Walk', 'Other'], default: 'Van' },
   { name: 'time', label: 'Time', type: 'datetime-local' },
   { name: 'provider', label: 'Provider' },
@@ -39,7 +40,7 @@ function Section({ title, col, fields, items, render }) {
         {items.map((x) => <li key={x.id} className="card tap" onClick={() => ed.openEdit(x)}>{render(x)}</li>)}
       </ul>
       {ed.editing && (
-        <FormModal title={(ed.editing.__new ? 'Add ' : 'Edit ') + title.toLowerCase()} fields={fields} initial={ed.editing}
+        <FormModal title={(ed.editing.__new ? 'Add ' : 'Edit ') + title.toLowerCase().replace(/s$/, '')} fields={fields} initial={ed.editing}
           onSave={(v) => (ed.editing.__new ? add(col, v) : update(col, ed.editing.id, v))}
           onClose={ed.close} onDelete={!ed.editing.__new && (() => remove(col, ed.editing.id))} />
       )}

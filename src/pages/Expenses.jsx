@@ -1,3 +1,4 @@
+import { EXPENSE_DESCRIPTIONS, CURRENCIES } from '../options'
 import { useStore } from '../store'
 import Header from '../components/Header'
 import FormModal, { useEditor } from '../components/Form'
@@ -9,12 +10,12 @@ const [A, B] = TRIP.travelers
 
 export const expenseFields = [
   { name: 'date', label: 'Date', type: 'date', required: true },
-  { name: 'description', label: 'Description', required: true },
+  { name: 'description', label: 'Description', type: 'combo', options: EXPENSE_DESCRIPTIONS, required: true },
   { name: 'category', label: 'Category', type: 'select', options: CATEGORIES.map((c) => [c, `${ICON[c]} ${c}`]), default: 'food' },
   { name: 'amount', label: 'Amount (₱)', type: 'number', required: true },
   { name: 'paidBy', label: 'Paid by', type: 'select', options: TRIP.travelers, default: A },
   { name: 'foreignAmount', label: 'Foreign amount (optional)', type: 'number' },
-  { name: 'foreignCurrency', label: 'Foreign currency (optional)', placeholder: 'USD' },
+  { name: 'foreignCurrency', label: 'Foreign currency (optional)', type: 'combo', options: CURRENCIES },
   { name: 'notes', label: 'Notes', type: 'textarea' }
 ]
 
