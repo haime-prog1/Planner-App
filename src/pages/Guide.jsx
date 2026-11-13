@@ -4,19 +4,19 @@ import { useStore } from '../store'
 import Header from '../components/Header'
 import FormModal, { useEditor } from '../components/Form'
 import { itineraryFields } from './Itinerary'
-import { guideFor, mapsUrl } from '../guide'
+import { guideFor, mapsUrl, tiktokUrl } from '../guide'
 
 /** Lowest number in a price label like "~₱1,500–2,500" (Free = 0) */
 const minPrice = (p) => { const m = String(p).replace(/,/g, '').match(/\d+/); return m ? Number(m[0]) : /free/i.test(p) ? 0 : 1e9 }
 
 const LEVELS = { 1: ['₱', 'Budget'], 2: ['₱₱', 'Mid-range'], 3: ['₱₱₱', 'Splurge'] }
-const TABS = [['food', '🍽️ Food'], ['spots', '🤫 Hidden spots'], ['activities', '🤿 Activities']]
+const TABS = [['food', '🍽️ Food'], ['bars', '🍹 Bars'], ['spots', '🤫 Spots'], ['activities', '🤿 Do']]
 
 export default function Guide() {
   const { add, trip } = useStore()
   const guide = guideFor(trip)
   const city = guide?.city || trip.destination.split(',')[0]
-  const tabs = TABS.filter(([k]) => !guide || guide[k].length)
+  const tabs = TABS.filter(([k]) => !guide || guide[k]?.length)
   const [tab, setTab] = useState('food')
   const [level, setLevel] = useState(0)
   const [q, setQ] = useState('')
@@ -27,7 +27,7 @@ export default function Guide() {
     .filter((x) => !q || `${x.name} ${x.area} ${x.what}`.toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => a.level - b.level || minPrice(a.price) - minPrice(b.price)) // cheapest first
 
-  const nearMe = { food: 'restaurants', spots: 'tourist attractions', activities: 'things to do' }[tab]
+  const nearMe = { food: 'restaurants', bars: 'bars', spots: 'tourist attractions', activities: 'things to do' }[tab]
 
   return (
     <div className="page">
@@ -59,14 +59,14 @@ export default function Guide() {
           <ul className="list">
             {items.filter((x) => x.level === l).map((x) => (
               <li key={x.name} className="card">
-                <div className="row-between"><strong>{x.name}</strong><span className="tag">{x.price}</span></div>
+                <div className="row-between"><strong>{x.name}{x.tiktok && <span className="tiktok">🔥 TikTok</span>}</strong><span className="tag">{x.price}</span></div>
                 <div className="muted small">📍 {x.area}</div>
                 <p className="small">{x.what}</p>
                 <div className="actions">
                   <a className="btn sm" href={mapsUrl(`${x.name}, ${city}`)} target="_blank" rel="noreferrer">📍 Maps</a>
                   <button className="btn sm" onClick={() => ed.openNew({
                     day: '1', status: 'planned', activity: x.name, location: x.area,
-                    time: tab === 'food' ? '12:00' : '09:00', notes: `${x.price} · ${x.what}`
+                    time: { food: '12:00', bars: '21:00' }[tab] || '09:00', notes: `${x.price} · ${x.what}`
                   })}>＋ Add to plan</button>
                 </div>
               </li>
@@ -79,8 +79,9 @@ export default function Guide() {
         <h2>Find more</h2>
         <a className="btn primary full" href={mapsUrl(`${q || nearMe} near me`)} target="_blank" rel="noreferrer">🧭 {q ? `“${q}”` : nearMe} near me</a>
         <a className="btn full" href={mapsUrl(`${q || nearMe} in ${city}`)} target="_blank" rel="noreferrer">🗺️ {q ? `“${q}”` : nearMe} in {city}</a>
+        <a className="btn full" href={tiktokUrl(`${q || nearMe} ${city}`)} target="_blank" rel="noreferrer">🎵 See {q ? `“${q}”` : nearMe} in {city} on TikTok</a>
       </section>
-      <p className="muted small">Researched from travel guides and review sites (Nov 2026). Prices are estimates and places can close — check Maps before going.</p>
+      <p className="muted small">Researched from travel guides and review sites (Nov 2026). Bar prices are per drink. Prices are estimates and places can close — check Maps before going.</p>
 
       {ed.editing && (
         <FormModal title="Add to plan" fields={itineraryFields(trip)} initial={ed.editing}
