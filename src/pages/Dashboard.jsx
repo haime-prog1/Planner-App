@@ -91,7 +91,7 @@ export default function Dashboard() {
         <Link to="/lists" className="btn">🧳 {data.packing.filter((p) => p.done).length}/{data.packing.length} packed</Link>
       </section>
 
-      {/boracay/i.test(trip.destination + trip.name) && <Link to="/guide" className="btn full guide-btn">🍽️ Food &amp; activities guide</Link>}
+      <Link to="/guide" className="btn full guide-btn">🍽️ Food &amp; hidden spots finder</Link>
 
       <Link to="/emergency" className="btn danger full">🆘 Emergency info</Link>
 
