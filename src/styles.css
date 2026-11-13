@@ -323,3 +323,4 @@ input, select, textarea { background: var(--fill); border: 1px solid var(--glass
 .welcome-icon { font-size: 56px; }
 .search { margin-bottom: 12px; }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.tiktok { margin-left: 8px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: linear-gradient(90deg, #25f4ee, #fe2c55); color: #fff; vertical-align: middle; white-space: nowrap; }

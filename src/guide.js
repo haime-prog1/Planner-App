@@ -83,12 +83,36 @@ const TACLOBAN_SPOTS = [
   { name: 'MacArthur Landing Memorial', area: 'Palo (~20 min)', level: 1, price: 'Free', what: 'WWII landing site with larger-than-life statues by the sea.' }
 ]
 
+// Bars: price is a rough per-drink range. tiktok: true only where a viral TikTok was confirmed.
+const BORACAY_BARS = [
+  { name: 'Exit Bar', area: 'Station 2', level: 1, price: '₱100–250', what: 'Reviewers call it the best place for cheap drinks and a fun crowd.' },
+  { name: 'Summer Place', area: 'Station 2', level: 1, price: '₱150–300', what: 'Long-running beachfront party bar.' },
+  { name: 'Paraw Beach Club', area: 'Station 2', level: 2, price: '₱200–400', what: 'Highly rated beach club — a classic nightlife hotspot.' },
+  { name: 'ADHD Silent Club', area: 'Station 2', level: 2, price: '₱250–500', what: 'Silent disco: headphones, pick your DJ channel. Quirky and fun.' },
+  { name: 'Wave Bar & Lounge', area: 'White Beach', level: 2, price: '₱250–500', what: 'Frequently listed lounge bar for a chill night.' },
+  { name: 'OM Boracay', area: 'Station 2', level: 2, price: '₱300–500', what: 'Tops several 2026 rankings; different music inside and outside.' },
+  { name: 'Epic Boracay', area: 'Station 2', level: 2, price: '₱300–500', what: 'One of the island’s main clubs — for a big night out.' },
+  { name: 'Prisma', area: 'Boracay', level: 3, price: '₱400–700', what: 'Called a hidden gem for its signature cocktails.' },
+  { name: 'Battuta Bar', area: 'Boracay', level: 3, price: '₱400–800', tiktok: true, what: 'Speakeasy with a secret entrance hidden in a wardrobe (keypad door) — went viral on TikTok in Jan 2026.' }
+]
+
+const GENSAN_BARS = [
+  { name: 'Kwiky Mart', area: 'General Santos', level: 1, price: '₱60–150', what: 'Casual convenience-store-style hangout — cheap drinks and quick bites.' },
+  { name: 'South Bay Food Park', area: 'Coast (former Lion’s Beach)', level: 1, price: '₱100–300', what: 'Strip of seven bars and eateries by the sea with live music — easy to bar-hop.' },
+  { name: 'Mismo Acoustic Bar', area: 'General Santos', level: 2, price: '₱150–350', what: 'Acoustic live music, chill night.' },
+  { name: 'IDK. Bar', area: 'General Santos', level: 2, price: '₱150–350', what: 'Described as a hidden gem in the city.' },
+  { name: 'Gensan 88 Gastro Bar', area: 'General Santos', level: 2, price: '₱200–400', what: 'Gastro bar — food and drinks.' },
+  { name: 'ZIP Bar & Lounge', area: 'General Santos', level: 3, price: '₱250–500', what: 'DJ-driven parties into the early hours — GenSan’s liveliest night out.' }
+]
+
 export const GUIDES = [
-  { id: 'boracay', city: 'Boracay', match: /boracay|malay|caticlan/i, food: BORACAY_FOOD, spots: BORACAY_SPOTS, activities: BORACAY_ACTIVITIES },
-  { id: 'gensan', city: 'General Santos City', match: /general santos|gensan/i, food: GENSAN_FOOD, spots: GENSAN_SPOTS, activities: [] },
-  { id: 'tacloban', city: 'Tacloban City', match: /tacloban|leyte/i, food: TACLOBAN_FOOD, spots: TACLOBAN_SPOTS, activities: [] }
+  { id: 'boracay', city: 'Boracay', match: /boracay|malay|caticlan/i, food: BORACAY_FOOD, spots: BORACAY_SPOTS, bars: BORACAY_BARS, activities: BORACAY_ACTIVITIES },
+  { id: 'gensan', city: 'General Santos City', match: /general santos|gensan/i, food: GENSAN_FOOD, spots: GENSAN_SPOTS, bars: GENSAN_BARS, activities: [] },
+  { id: 'tacloban', city: 'Tacloban City', match: /tacloban|leyte/i, food: TACLOBAN_FOOD, spots: TACLOBAN_SPOTS, bars: [], activities: [] }
 ]
 
 export const guideFor = (trip) => GUIDES.find((g) => g.match.test(`${trip.destination} ${trip.name}`)) || null
 
 export const mapsUrl = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`
+
+export const tiktokUrl = (q) => `https://www.tiktok.com/search?q=${encodeURIComponent(q)}`
