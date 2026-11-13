@@ -4,7 +4,8 @@ import { useStore } from '../store'
 import Header from '../components/Header'
 import FormModal, { useEditor } from '../components/Form'
 import { itineraryFields } from './Itinerary'
-import { guideFor, mapsUrl, tiktokUrl } from '../guide'
+import { guideFor, mapsUrl, tiktokUrl, menuSearchUrl } from '../guide'
+import MenuPhotos from '../components/MenuPhotos'
 
 /** Lowest number in a price label like "~₱1,500–2,500" (Free = 0) */
 const minPrice = (p) => { const m = String(p).replace(/,/g, '').match(/\d+/); return m ? Number(m[0]) : /free/i.test(p) ? 0 : 1e9 }
@@ -64,10 +65,14 @@ export default function Guide() {
                 <p className="small">{x.what}</p>
                 <div className="actions">
                   <a className="btn sm" href={mapsUrl(`${x.name}, ${city}`)} target="_blank" rel="noreferrer">📍 Maps</a>
+                  {(tab === 'food' || tab === 'bars') && (
+                    <a className="btn sm" href={menuSearchUrl(`${x.name} ${city}`)} target="_blank" rel="noreferrer">📋 Menu</a>
+                  )}
                   <button className="btn sm" onClick={() => ed.openNew({
                     day: '1', status: 'planned', activity: x.name, location: x.area,
                     time: { food: '12:00', bars: '21:00' }[tab] || '09:00', notes: `${x.price} · ${x.what}`
                   })}>＋ Add to plan</button>
+                  {(tab === 'food' || tab === 'bars') && <MenuPhotos place={`${guide.id}:${x.name}`} />}
                 </div>
               </li>
             ))}

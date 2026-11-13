@@ -116,3 +116,6 @@ export const guideFor = (trip) => GUIDES.find((g) => g.match.test(`${trip.destin
 export const mapsUrl = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`
 
 export const tiktokUrl = (q) => `https://www.tiktok.com/search?q=${encodeURIComponent(q)}`
+
+/** Image search for photos of a place's menu posted by others */
+export const menuSearchUrl = (q) => `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q + ' menu')}`
